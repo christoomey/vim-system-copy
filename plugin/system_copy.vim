@@ -38,6 +38,7 @@ endfunction
 
 xnoremap <silent> <Plug>SystemCopy :<C-U>call <SID>system_copy(visualmode(),visualmode() ==# 'V' ? 1 : 0)<CR>
 nnoremap <silent> <Plug>SystemCopy :<C-U>set opfunc=<SID>system_copy<CR>g@
+nnoremap <silent> <Plug>SystemCopyLine :<C-U>set opfunc=<SID>system_copy<Bar>exe 'norm! 'v:count1.'g@_'<CR>
 
 if !hasmapto('<Plug>SystemCopy') || maparg('cp','n') ==# ''
   xmap cp <Plug>SystemCopy
