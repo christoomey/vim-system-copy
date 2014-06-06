@@ -11,17 +11,14 @@ let g:loaded_system_copy = 1
 function! s:system_copy(type, ...) abort
   let mode = <SID>resolve_mode(a:type, a:0)
   if mode == s:linewise
-    let first = line("'[")
-    let last = line("']")
-    let to_copy = join(getline(first, last), '')
+    let lines = { 'start': line("'["), 'end': line("']") }
+    silent exe lines.start . "," . lines.end . "y"
   elseif mode == s:visual || mode == s:blockwise
     silent exe "normal! `<" . a:type . "`>y"
-    let to_copy = getreg('@')
   else
     silent exe "normal! `[v`]y"
-    let to_copy = getreg('@')
   endif
-  silent call system('pbcopy', to_copy)
+  silent call system('pbcopy', getreg('@'))
   echohl String | echon 'Copied to system clipboard via: ' . mode | echohl None
 endfunction
 
