@@ -1,9 +1,9 @@
 System Copy
 ===========
 
-System copy provides vim mappings for copying text to the clipboard on OS X
-using `pbcopy`. Most people will be happy just setting their Vim clipboard to
-the system clipboard, but I find that doing so pollutes my clipboard history.
+System copy provides vim mappings for copying text to the os specific
+clipboard.  Most people will be happy just setting their Vim clipboard to the
+system clipboard, but I find that doing so pollutes my clipboard history.
 Instead, this plugin creates a unique mapping that explicitly pulls content
 from Vim into the system clipboard.
 
@@ -21,6 +21,13 @@ object. For instance:
 
 In addition, `cP` is mapped to copy the current line directly.
 
+Clipboard Utilities
+-------------------
+
+ - OSX     - pbcopy
+ - Windows - clip
+ - Linux   - xsel
+
 Installation
 ------------
 
@@ -28,9 +35,9 @@ If you don't have a preferred installation method, I recommend using [Vundle][].
 Assuming you have Vundle installed and configured, the following steps will
 install the plugin:
 
-Add the following line to your `~/.vimrc` and then run `BundleInstall` from
+Add the following line to your `~/.vimrc` and then run `PluginInstall` from
 within Vim:
 
 ``` vim
-Bundle 'christoomey/vim-system-copy'
+Plugin 'christoomey/vim-system-copy'
 ```

@@ -18,7 +18,7 @@ function! s:system_copy(type, ...) abort
   else
     silent exe "normal! `[v`]y"
   endif
-  silent call system('pbcopy', getreg('@'))
+  silent call system(s:CopyCommandForCurrentOS(), getreg('@'))
   echohl String | echon 'Copied to system clipboard via: ' . mode | echohl None
 endfunction
 
@@ -30,6 +30,17 @@ function! s:resolve_mode(type, arg)
     return s:linewise
   else
     return s:motion
+  endif
+endfunction
+
+function! s:CopyCommandForCurrentOS()
+  let os = substitute(system('uname'), '\n', '', '')
+  if has("gui_mac") || os == 'Darwin'
+    return 'pbcopy'
+  elseif has("gui_win32")
+    return 'clip'
+  else
+    return 'xsel --clipboard --input'
   endif
 endfunction
 
