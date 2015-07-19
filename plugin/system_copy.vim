@@ -22,6 +22,12 @@ function! s:system_copy(type, ...) abort
   echohl String | echon 'Copied to system clipboard via: ' . mode | echohl None
 endfunction
 
+function! s:system_paste() abort
+  let command = <SID>PasteCommandForCurrentOS()
+  put =system(command)
+  echohl String | echon 'Pasted to vim using: ' . command | echohl None
+endfunction
+
 function! s:resolve_mode(type, arg)
   let visual_mode = a:arg != 0
   if visual_mode
@@ -44,12 +50,29 @@ function! s:CopyCommandForCurrentOS()
   endif
 endfunction
 
+function! s:PasteCommandForCurrentOS()
+  let os = substitute(system('uname'), '\n', '', '')
+  if has("gui_mac") || os == 'Darwin'
+    return 'pbpaste'
+  elseif has("gui_win32")
+    return 'paste'
+  else
+    return 'xsel --clipboard --output'
+  endif
+endfunction
+
 xnoremap <silent> <Plug>SystemCopy :<C-U>call <SID>system_copy(visualmode(),visualmode() ==# 'V' ? 1 : 0)<CR>
 nnoremap <silent> <Plug>SystemCopy :<C-U>set opfunc=<SID>system_copy<CR>g@
 nnoremap <silent> <Plug>SystemCopyLine :<C-U>set opfunc=<SID>system_copy<Bar>exe 'norm! 'v:count1.'g@_'<CR>
+nnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste()<CR>
 
 if !hasmapto('<Plug>SystemCopy') || maparg('cp','n') ==# ''
   xmap cp <Plug>SystemCopy
   nmap cp <Plug>SystemCopy
   nmap cP <Plug>SystemCopyLine
 endif
+
+if !hasmapto('<Plug>SystemPaste') || maparg('cv','n') ==# ''
+  nmap cv <Plug>SystemPaste
+endif
+
