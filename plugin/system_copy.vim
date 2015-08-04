@@ -2,6 +2,10 @@ let s:blockwise = 'blockwise visual'
 let s:visual = 'visual'
 let s:motion = 'motion'
 let s:linewise = 'linewise'
+let s:mac = 'mac'
+let s:windows = 'windows'
+let s:linux = 'linux'
+let s:os = ''
 
 if exists('g:loaded_system_copy') || &cp || v:version < 700
   finish
@@ -39,24 +43,43 @@ function! s:resolve_mode(type, arg)
   endif
 endfunction
 
-function! s:CopyCommandForCurrentOS()
+function! s:currentOS()
+  if !empty(s:os)
+    return s:os
+  endif
   let os = substitute(system('uname'), '\n', '', '')
-  if has("gui_mac") || os == 'Darwin'
-    return 'pbcopy'
+  if has("gui_mac") || os ==? 'Darwin'
+    let s:os = s:mac
+    return s:mac
   elseif has("gui_win32")
+    let s:os = s:windows
+    return s:windows
+  elseif os ==? 'Linux'
+    let s:os = s:linux
+    return s:linux
+  endif
+  exe "normal \<Esc>"
+  throw "unknown OS: " . os
+endfunction
+
+function! s:CopyCommandForCurrentOS()
+  let os = <SID>currentOS()
+  if os == s:mac
+    return 'pbcopy'
+  elseif os == s:windows
     return 'clip'
-  else
+  elseif os == s:linux
     return 'xsel --clipboard --input'
   endif
 endfunction
 
 function! s:PasteCommandForCurrentOS()
-  let os = substitute(system('uname'), '\n', '', '')
-  if has("gui_mac") || os == 'Darwin'
+  let os = <SID>currentOS()
+  if os == s:mac
     return 'pbpaste'
-  elseif has("gui_win32")
+  elseif os == s:windows
     return 'paste'
-  else
+  elseif os == s:linux
     return 'xsel --clipboard --output'
   endif
 endfunction
@@ -75,4 +98,3 @@ endif
 if !hasmapto('<Plug>SystemPaste') || maparg('cv','n') ==# ''
   nmap cv <Plug>SystemPaste
 endif
-

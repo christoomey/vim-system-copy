@@ -10,8 +10,9 @@ from Vim into the system clipboard.
 Usage
 -----
 
-System copy provides a mapping to copy and paste to the system clipboard.
-It accepts a motion or can be used with a visual selection.
+System copy provides a mapping to copy to the system clipboard using a motion
+or visual selection. It also probides a mapping for pasting from the system
+clipboard.
 
 The default mapping is `cp`, and can be followed by any motion or text
 object. For instance:
