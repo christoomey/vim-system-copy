@@ -5,7 +5,6 @@ let s:linewise = 'linewise'
 let s:mac = 'mac'
 let s:windows = 'windows'
 let s:linux = 'linux'
-let s:os = ''
 
 if exists('g:loaded_system_copy') || &cp || v:version < 700
   finish
@@ -44,22 +43,19 @@ function! s:resolve_mode(type, arg)
 endfunction
 
 function! s:currentOS()
-  if !empty(s:os)
-    return s:os
-  endif
   let os = substitute(system('uname'), '\n', '', '')
+  let known_os = 'unknown'
   if has("gui_mac") || os ==? 'Darwin'
-    let s:os = s:mac
-    return s:mac
+    let known_os = s:mac
   elseif has("gui_win32")
-    let s:os = s:windows
-    return s:windows
+    let known_os = s:windows
   elseif os ==? 'Linux'
-    let s:os = s:linux
-    return s:linux
+    let known_os = s:linux
+  else
+    exe "normal \<Esc>"
+    throw "unknown OS: " . os
   endif
-  exe "normal \<Esc>"
-  throw "unknown OS: " . os
+  return known_os
 endfunction
 
 function! s:CopyCommandForCurrentOS()

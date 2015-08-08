@@ -1,7 +1,7 @@
 System Copy
 ===========
 
-System copy provides vim mappings for copy/paste text to the os specific
+System copy provides vim mappings for copying / pastying text to the os specific
 clipboard.  Most people will be happy just setting their Vim clipboard to the
 system clipboard, but I find that doing so pollutes my clipboard history.
 Instead, this plugin creates a unique mapping that explicitly pulls content
@@ -11,7 +11,7 @@ Usage
 -----
 
 System copy provides a mapping to copy to the system clipboard using a motion
-or visual selection. It also probides a mapping for pasting from the system
+or visual selection. It also provides a mapping for pasting from the system
 clipboard.
 
 The default mapping is `cp`, and can be followed by any motion or text
@@ -22,7 +22,7 @@ object. For instance:
 
 In addition, `cP` is mapped to copy the current line directly.
 
-The `cv` is mapped to paste content of system clipboard.
+The sequence `cv` is mapped to paste the content of system clipboard.
 
 Clipboard Utilities
 -------------------
