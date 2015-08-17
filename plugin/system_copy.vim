@@ -1,3 +1,8 @@
+if exists('g:loaded_system_copy') || v:version < 700
+  finish
+endif
+let g:loaded_system_copy = 1
+
 let s:blockwise = 'blockwise visual'
 let s:visual = 'visual'
 let s:motion = 'motion'
@@ -5,11 +10,6 @@ let s:linewise = 'linewise'
 let s:mac = 'mac'
 let s:windows = 'windows'
 let s:linux = 'linux'
-
-if exists('g:loaded_system_copy') || &cp || v:version < 700
-  finish
-endif
-let g:loaded_system_copy = 1
 
 function! s:system_copy(type, ...) abort
   let mode = <SID>resolve_mode(a:type, a:0)
@@ -21,8 +21,9 @@ function! s:system_copy(type, ...) abort
   else
     silent exe "normal! `[v`]y"
   endif
-  silent call system(s:CopyCommandForCurrentOS(), getreg('@'))
-  echohl String | echon 'Copied to system clipboard via: ' . mode | echohl None
+  let command = s:CopyCommandForCurrentOS()
+  silent call system(command, getreg('@'))
+  echohl String | echon 'Copied to clipboard using: ' . command | echohl None
 endfunction
 
 function! s:system_paste() abort
@@ -59,6 +60,9 @@ function! s:currentOS()
 endfunction
 
 function! s:CopyCommandForCurrentOS()
+  if exists('g:system_copy#copy_command')
+    return g:system_copy#copy_command
+  endif
   let os = <SID>currentOS()
   if os == s:mac
     return 'pbcopy'
@@ -70,6 +74,9 @@ function! s:CopyCommandForCurrentOS()
 endfunction
 
 function! s:PasteCommandForCurrentOS()
+  if exists('g:system_copy#paste_command')
+    return g:system_copy#paste_command
+  endif
   let os = <SID>currentOS()
   if os == s:mac
     return 'pbpaste'
@@ -85,12 +92,20 @@ nnoremap <silent> <Plug>SystemCopy :<C-U>set opfunc=<SID>system_copy<CR>g@
 nnoremap <silent> <Plug>SystemCopyLine :<C-U>set opfunc=<SID>system_copy<Bar>exe 'norm! 'v:count1.'g@_'<CR>
 nnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste()<CR>
 
-if !hasmapto('<Plug>SystemCopy') || maparg('cp','n') ==# ''
-  xmap cp <Plug>SystemCopy
+if !hasmapto('<Plug>SystemCopy', 'n') || maparg('cp', 'n') ==# ''
   nmap cp <Plug>SystemCopy
+endif
+
+if !hasmapto('<Plug>SystemCopy', 'v') || maparg('cp', 'v') ==# ''
+  xmap cp <Plug>SystemCopy
+endif
+
+if !hasmapto('<Plug>SystemCopyLine', 'n') || maparg('cP', 'n') ==# ''
   nmap cP <Plug>SystemCopyLine
 endif
 
-if !hasmapto('<Plug>SystemPaste') || maparg('cv','n') ==# ''
+if !hasmapto('<Plug>SystemPaste', 'n') || maparg('cv', 'n') ==# ''
   nmap cv <Plug>SystemPaste
 endif
+
+" vim:ts=2:sw=2:sts=2
