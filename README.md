@@ -22,13 +22,16 @@ object. For instance:
 
 In addition, `cP` is mapped to copy the current line directly.
 
-The sequence `cv` is mapped to paste the content of system clipboard to the
+The sequence `cov` is mapped to paste the content of system clipboard to the
 next line.
+
+The `cv` is mapped to paste the system clipboard content after cursor
+position.
 
 Clipboard Utilities
 -------------------
 
- - OSX     - `pbcopy` and `pbpaste`
+ - OS X    - `pbcopy` and `pbpaste`
  - Windows - `clip` and `paste`
  - Linux   - `xsel`
 
