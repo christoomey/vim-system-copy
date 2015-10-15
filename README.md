@@ -25,6 +25,10 @@ In addition, `cP` is mapped to copy the current line directly.
 The sequence `cv` is mapped to paste the content of system clipboard to the
 next line.
 
+A command is also included that will copy the current line or a range of lines:
+
+`:15,24SystemCopy` => copy lines 15–24 into system clipboard
+
 Clipboard Utilities
 -------------------
 
