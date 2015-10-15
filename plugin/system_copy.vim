@@ -7,6 +7,7 @@ let s:blockwise = 'blockwise visual'
 let s:visual = 'visual'
 let s:motion = 'motion'
 let s:linewise = 'linewise'
+let s:command_mode = 'command mode'
 let s:mac = 'mac'
 let s:windows = 'windows'
 let s:linux = 'linux'
@@ -16,6 +17,8 @@ function! s:system_copy(type, ...) abort
   if mode == s:linewise
     let lines = { 'start': line("'["), 'end': line("']") }
     silent exe lines.start . "," . lines.end . "y"
+  elseif mode == s:command_mode
+    silent exe a:1 . "," . a:2 . "y"
   elseif mode == s:visual || mode == s:blockwise
     silent exe "normal! `<" . a:type . "`>y"
   else
@@ -34,7 +37,9 @@ endfunction
 
 function! s:resolve_mode(type, arg)
   let visual_mode = a:arg != 0
-  if visual_mode
+  if a:type == s:command_mode
+    return s:command_mode
+  elseif visual_mode
     return (a:type == '') ?  s:blockwise : s:visual
   elseif a:type == 'line'
     return s:linewise
@@ -86,6 +91,8 @@ function! s:PasteCommandForCurrentOS()
     return 'xsel --clipboard --output'
   endif
 endfunction
+
+command! -range SystemCopy call <SID>system_copy(s:command_mode, <line1>, <line2>)
 
 xnoremap <silent> <Plug>SystemCopy :<C-U>call <SID>system_copy(visualmode(),visualmode() ==# 'V' ? 1 : 0)<CR>
 nnoremap <silent> <Plug>SystemCopy :<C-U>set opfunc=<SID>system_copy<CR>g@
