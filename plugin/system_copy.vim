@@ -13,17 +13,17 @@ let s:linux = 'linux'
 
 function! s:system_copy(type, ...) abort
   let mode = <SID>resolve_mode(a:type, a:0)
-  let command = s:CopyCommandForCurrentOS()
   if mode == s:linewise
     let lines = { 'start': line("'["), 'end': line("']") }
-    silent exe lines.start . "," . lines.end . "w !" . command
+    silent exe lines.start . "," . lines.end . "y"
   elseif mode == s:visual || mode == s:blockwise
-    silent exe "'<,'>w !" . command
+    silent exe "normal! `<" . a:type . "`>y"
   else
-    silent exe "normal! `[v`]"
-    silent exe "'<,'>w !" . command
+    silent exe "normal! `[v`]y"
   endif
-  redraw | echohl String | echon 'Copied to clipboard using: ' . command | echohl None
+  let command = s:CopyCommandForCurrentOS()
+  silent call system(command, getreg('@'))
+  echohl String | echon 'Copied to clipboard using: ' . command | echohl None
 endfunction
 
 function! s:system_paste() abort
