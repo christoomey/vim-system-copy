@@ -13,6 +13,7 @@ let s:linux = 'linux'
 
 function! s:system_copy(type, ...) abort
   let mode = <SID>resolve_mode(a:type, a:0)
+  let unnamed = @@
   if mode == s:linewise
     let lines = { 'start': line("'["), 'end': line("']") }
     silent exe lines.start . "," . lines.end . "y"
@@ -24,6 +25,7 @@ function! s:system_copy(type, ...) abort
   let command = s:CopyCommandForCurrentOS()
   silent call system(command, getreg('@'))
   echohl String | echon 'Copied to clipboard using: ' . command | echohl None
+  let @@ = unnamed
 endfunction
 
 function! s:system_paste() abort
