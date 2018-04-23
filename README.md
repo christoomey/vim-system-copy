@@ -31,7 +31,7 @@ Clipboard Utilities
  - OSX     - `pbcopy` and `pbpaste`
  - Windows - `clip` and `paste`
  - Linux   - `xsel`
- 
+
  **Note:** `xsel` can be installed with `apt-get install xsel` if your system doesn't have it installed
 
 Options
@@ -49,20 +49,30 @@ And to declare custom paste command use:
 let g:system_copy#paste_command='xclip -sel clipboard -o'
 ```
 
+To make the original yank vim command to works with this plugin, one can add the following to
+it's `.vimrc`:
+
+```
+" Mapping Y to use copy
+nmap Y <Plug>SystemCopy
+" Mapping P to use paste
+nmap P <Plug>SystemPaste
+```
+
 Installation
 ------------
 
-If you don't have a preferred installation method, I recommend using [Vundle](https://github.com/VundleVim/Vundle.vim).
-Assuming you have Vundle installed and configured, the following steps will
-install the plugin:
+If you don't have a preferred installation method, I recommend using [Plug](https://github.com/junegunn/vim-plug).
 
 Add the following line to your `~/.vimrc` and then run `:PluginInstall` from
 within Vim:
 
 ``` vim
-call vundle#begin()
+call plug#begin()
 " ...
-Plugin 'christoomey/vim-system-copy'
+Plug 'christoomey/vim-system-copy'
 " ...
-call vundle#end()
+call plug#end()
 ```
+
+
