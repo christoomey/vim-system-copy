@@ -48,16 +48,14 @@ And to declare custom paste command use:
 ``` vim
 let g:system_copy#paste_command='xclip -sel clipboard -o'
 ```
+If you'd rather not use the default mappings, you can configure
+custom mappings in you `~/.vimrc` instead, as:
 
-To make the original yank vim command to works with this plugin, one can add the following to
-it's `.vimrc`:
+``` vim
+# Use <leader> maps instead of the default key maps
+nmap <leader>cp <Plug>SystemCopy
+nmap <leader>cv <Plug>SystemPaste
 
-```
-" Mapping Y to use copy
-nmap Y <Plug>SystemCopy
-" Mapping P to use paste
-nmap P <Plug>SystemPaste
-```
 
 Installation
 ------------
@@ -74,5 +72,3 @@ Plug 'christoomey/vim-system-copy'
 " ...
 call plug#end()
 ```
-
-
