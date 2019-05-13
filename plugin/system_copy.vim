@@ -71,7 +71,11 @@ function! s:CopyCommandForCurrentOS()
   elseif os == s:windows
     return 'clip'
   elseif os == s:linux
-    return 'xsel --clipboard --input'
+    if !empty($WAYLAND_DISPLAY)
+      return 'wl-copy'
+    else
+      return 'xsel --clipboard --input'
+    endif
   endif
 endfunction
 
@@ -85,7 +89,11 @@ function! s:PasteCommandForCurrentOS()
   elseif os == s:windows
     return 'paste'
   elseif os == s:linux
-    return 'xsel --clipboard --output'
+    if !empty($WAYLAND_DISPLAY)
+      return 'wl-paste'
+    else
+      return 'xsel --clipboard --output'
+    endif
   endif
 endfunction
 
