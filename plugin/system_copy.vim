@@ -7,6 +7,7 @@ let s:blockwise = 'blockwise visual'
 let s:visual = 'visual'
 let s:motion = 'motion'
 let s:linewise = 'linewise'
+let s:paste_inline = 'inline'
 let s:mac = 'mac'
 let s:windows = 'windows'
 let s:linux = 'linux'
@@ -28,9 +29,14 @@ function! s:system_copy(type, ...) abort
   let @@ = unnamed
 endfunction
 
-function! s:system_paste() abort
+function! s:system_paste(type) abort
   let command = <SID>PasteCommandForCurrentOS()
-  put =system(command)
+  silent call setreg('"', system(command))
+  if a:type == s:paste_inline
+    silent exe "normal! \"\"gp"
+  else
+    silent put \"
+  endif
   echohl String | echon 'Pasted to vim using: ' . command | echohl None
 endfunction
 
@@ -100,7 +106,8 @@ endfunction
 xnoremap <silent> <Plug>SystemCopy :<C-U>call <SID>system_copy(visualmode(),visualmode() ==# 'V' ? 1 : 0)<CR>
 nnoremap <silent> <Plug>SystemCopy :<C-U>set opfunc=<SID>system_copy<CR>g@
 nnoremap <silent> <Plug>SystemCopyLine :<C-U>set opfunc=<SID>system_copy<Bar>exe 'norm! 'v:count1.'g@_'<CR>
-nnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste()<CR>
+nnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste('below')<CR>
+nnoremap <silent> <Plug>SystemPasteInline :<C-U>call <SID>system_paste('inline')<CR>
 
 if !hasmapto('<Plug>SystemCopy', 'n') || maparg('cp', 'n') ==# ''
   nmap cp <Plug>SystemCopy
@@ -114,8 +121,12 @@ if !hasmapto('<Plug>SystemCopyLine', 'n') || maparg('cP', 'n') ==# ''
   nmap cP <Plug>SystemCopyLine
 endif
 
-if !hasmapto('<Plug>SystemPaste', 'n') || maparg('cv', 'n') ==# ''
-  nmap cv <Plug>SystemPaste
+if !hasmapto('<Plug>SystemPasteInline', 'n') || maparg('cv', 'n') ==# ''
+  nmap cv <Plug>SystemPasteInline
+endif
+
+if !hasmapto('<Plug>SystemPaste', 'n') || maparg('cov', 'n') ==# ''
+  nmap cov <Plug>SystemPaste
 endif
 
 " vim:ts=2:sw=2:sts=2
