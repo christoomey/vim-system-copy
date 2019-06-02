@@ -28,7 +28,25 @@ function! s:system_copy(type, ...) abort
   let @@ = unnamed
 endfunction
 
-function! s:system_paste() abort
+function! s:system_paste(type, ...) abort
+  let mode = <SID>resolve_mode(a:type, a:0)
+  let command = <SID>PasteCommandForCurrentOS()
+  let unnamed = @@
+  if mode == s:linewise
+    let lines = { 'start': line("'["), 'end': line("']") }
+    silent exe lines.start . "," . lines.end . "d"
+    silent exe "set paste | normal! O" . system(command)
+    silent exe "set nopaste"
+  elseif mode == s:visual || mode == s:blockwise
+    silent exe "normal! `<" . a:type . "`>c" . system(command)
+  else
+    silent exe "normal! `[v`]c" . system(command)
+  endif
+  echohl String | echon 'Pasted to clipboard using: ' . command | echohl None
+  let @@ = unnamed
+endfunction
+
+function! s:system_paste_line() abort
   let command = <SID>PasteCommandForCurrentOS()
   put =system(command)
   echohl String | echon 'Pasted to vim using: ' . command | echohl None
@@ -100,7 +118,9 @@ endfunction
 xnoremap <silent> <Plug>SystemCopy :<C-U>call <SID>system_copy(visualmode(),visualmode() ==# 'V' ? 1 : 0)<CR>
 nnoremap <silent> <Plug>SystemCopy :<C-U>set opfunc=<SID>system_copy<CR>g@
 nnoremap <silent> <Plug>SystemCopyLine :<C-U>set opfunc=<SID>system_copy<Bar>exe 'norm! 'v:count1.'g@_'<CR>
-nnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste()<CR>
+xnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste(visualmode(),visualmode() ==# 'V' ? 1 : 0)<CR>
+nnoremap <silent> <Plug>SystemPaste :<C-U>set opfunc=<SID>system_paste<CR>g@
+nnoremap <silent> <Plug>SystemPasteLine :<C-U>call <SID>system_paste_line()<CR>
 
 if !hasmapto('<Plug>SystemCopy', 'n') || maparg('cp', 'n') ==# ''
   nmap cp <Plug>SystemCopy
@@ -118,4 +138,11 @@ if !hasmapto('<Plug>SystemPaste', 'n') || maparg('cv', 'n') ==# ''
   nmap cv <Plug>SystemPaste
 endif
 
+if !hasmapto('<Plug>SystemPaste', 'v') || maparg('cv', 'v') ==# ''
+  xmap cv <Plug>SystemPaste
+endif
+
+if !hasmapto('<Plug>SystemPasteLine', 'n') || maparg('cV', 'n') ==# ''
+  nmap cV <Plug>SystemPasteLine
+endif
 " vim:ts=2:sw=2:sts=2

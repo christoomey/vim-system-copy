@@ -14,15 +14,16 @@ System copy provides a mapping to copy to the system clipboard using a motion
 or visual selection. It also provides a mapping for pasting from the system
 clipboard.
 
-The default mapping is `cp`, and can be followed by any motion or text
+The default mapping is `cp` for copying and `cv` for pasting, and can be followed by any motion or text
 object. For instance:
 
 - `cpiw` => copy word into system clipboard
 - `cpi'` => copy inside single quotes to system clipboard
+- `cvi'` => paste inside single quotes from system clipboard
 
 In addition, `cP` is mapped to copy the current line directly.
 
-The sequence `cv` is mapped to paste the content of system clipboard to the
+The sequence `cV` is mapped to paste the content of system clipboard to the
 next line.
 
 Clipboard Utilities
@@ -31,7 +32,7 @@ Clipboard Utilities
  - OSX     - `pbcopy` and `pbpaste`
  - Windows - `clip` and `paste`
  - Linux   - `xsel`
- 
+
  **Note:** `xsel` can be installed with `apt-get install xsel` if your system doesn't have it installed
 
 Options
