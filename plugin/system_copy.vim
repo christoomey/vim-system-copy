@@ -108,7 +108,7 @@ function! s:PasteCommandForCurrentOS()
     return 'paste'
   elseif os == s:linux
     if !empty($WAYLAND_DISPLAY)
-      return 'wl-paste'
+      return 'wl-paste -n'
     else
       return 'xsel --clipboard --output'
     endif
