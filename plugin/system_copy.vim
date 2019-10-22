@@ -68,7 +68,7 @@ function! s:currentOS()
   let known_os = 'unknown'
   if has("gui_mac") || os ==? 'Darwin'
     let known_os = s:mac
-  elseif has("gui_win32") || os =~? 'cygwin'
+  elseif has("gui_win32") || os =~? 'cygwin' || os =~? 'MINGW'
     let known_os = s:windows
   elseif os ==? 'Linux'
     let known_os = s:linux
