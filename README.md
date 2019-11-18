@@ -49,21 +49,27 @@ And to declare custom paste command use:
 ``` vim
 let g:system_copy#paste_command='xclip -sel clipboard -o'
 ```
+If you'd rather not use the default mappings, you can configure
+custom mappings in you `~/.vimrc` instead, as:
+
+``` vim
+# Use <leader> maps instead of the default key maps
+nmap <leader>cp <Plug>SystemCopy
+nmap <leader>cv <Plug>SystemPaste
+
 
 Installation
 ------------
 
-If you don't have a preferred installation method, I recommend using [Vundle](https://github.com/VundleVim/Vundle.vim).
-Assuming you have Vundle installed and configured, the following steps will
-install the plugin:
+If you don't have a preferred installation method, I recommend using [Plug](https://github.com/junegunn/vim-plug).
 
 Add the following line to your `~/.vimrc` and then run `:PluginInstall` from
 within Vim:
 
 ``` vim
-call vundle#begin()
+call plug#begin()
 " ...
-Plugin 'christoomey/vim-system-copy'
+Plug 'christoomey/vim-system-copy'
 " ...
-call vundle#end()
+call plug#end()
 ```
