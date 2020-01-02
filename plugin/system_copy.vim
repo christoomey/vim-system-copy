@@ -32,16 +32,17 @@ function! s:system_paste(type, ...) abort
   let mode = <SID>resolve_mode(a:type, a:0)
   let command = <SID>PasteCommandForCurrentOS()
   let unnamed = @@
+  silent exe "set paste"
   if mode == s:linewise
     let lines = { 'start': line("'["), 'end': line("']") }
     silent exe lines.start . "," . lines.end . "d"
-    silent exe "set paste | normal! O" . system(command)
-    silent exe "set nopaste"
+    silent exe "normal! O" . system(command)
   elseif mode == s:visual || mode == s:blockwise
     silent exe "normal! `<" . a:type . "`>c" . system(command)
   else
     silent exe "normal! `[v`]c" . system(command)
   endif
+  silent exe "set nopaste"
   echohl String | echon 'Pasted to clipboard using: ' . command | echohl None
   let @@ = unnamed
 endfunction
