@@ -49,6 +49,11 @@ And to declare custom paste command use:
 ``` vim
 let g:system_copy#paste_command='xclip -sel clipboard -o'
 ```
+By default `system_copy` prints a message each time you execute the copy- or paste-operation.
+If you want to suppress it use:
+```vim
+let g:system_copy_silent = 1
+```
 
 Installation
 ------------

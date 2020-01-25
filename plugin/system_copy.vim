@@ -3,6 +3,10 @@ if exists('g:loaded_system_copy') || v:version < 700
 endif
 let g:loaded_system_copy = 1
 
+if !exists("g:system_copy_silent")
+  let g:system_copy_silent = 0
+endif
+
 let s:blockwise = 'blockwise visual'
 let s:visual = 'visual'
 let s:motion = 'motion'
@@ -24,7 +28,9 @@ function! s:system_copy(type, ...) abort
   endif
   let command = s:CopyCommandForCurrentOS()
   silent call system(command, getreg('@'))
-  echohl String | echon 'Copied to clipboard using: ' . command | echohl None
+  if g:system_copy_silent == 0
+    echohl String | echon 'Copied to clipboard using: ' . command | echohl None
+  endif
   let @@ = unnamed
 endfunction
 
@@ -43,14 +49,18 @@ function! s:system_paste(type, ...) abort
     silent exe "normal! `[v`]c" . system(command)
   endif
   silent exe "set nopaste"
-  echohl String | echon 'Pasted to clipboard using: ' . command | echohl None
+  if g:system_copy_silent == 0
+    echohl String | echon 'Pasted to clipboard using: ' . command | echohl None
+  endif
   let @@ = unnamed
 endfunction
 
 function! s:system_paste_line() abort
   let command = <SID>PasteCommandForCurrentOS()
   put =system(command)
-  echohl String | echon 'Pasted to vim using: ' . command | echohl None
+  if g:system_copy_silent == 0
+    echohl String | echon 'Pasted to vim using: ' . command | echohl None
+  endif
 endfunction
 
 function! s:resolve_mode(type, arg)
