@@ -30,7 +30,7 @@ Clipboard Utilities
 -------------------
 
  - OSX     - `pbcopy` and `pbpaste`
- - Windows - `clip` and `paste`
+ - Windows - `clip` and `powershell.exe -NoLogo -NoProfile -Noninteractive -Command "Get-Clipboard"`
  - Linux   - `xsel`
 
  **Note:** `xsel` can be installed with `apt-get install xsel` if your system doesn't have it installed
