@@ -29,7 +29,7 @@ function! s:system_copy(type, ...) abort
   let command = s:CopyCommandForCurrentOS()
   silent call system(command, getreg('@'))
   " Call OSC52 copy
-  if exists('*YankOSC52')
+  if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*YankOSC52')
     call YankOSC52(getreg('@'))
   endif
   if g:system_copy_silent == 0
