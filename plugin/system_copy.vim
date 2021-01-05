@@ -120,7 +120,7 @@ function! s:PasteCommandForCurrentOS()
   if os == s:mac
     return 'pbpaste'
   elseif os == s:windows
-    return 'paste'
+    return 'powershell.exe -NoLogo -NoProfile -Noninteractive -Command "Get-Clipboard"'
   elseif os == s:linux
     if !empty($WAYLAND_DISPLAY)
       return 'wl-paste -n'
