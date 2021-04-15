@@ -1,21 +1,19 @@
-System Copy
-===========
+# System Copy
 
 System copy provides vim mappings for copying / pasting text to the os specific
-clipboard.  Most people will be happy just setting their Vim clipboard to the
+clipboard. Most people will be happy just setting their Vim clipboard to the
 system clipboard, but I find that doing so pollutes my clipboard history.
-Instead, this plugin creates a unique mapping that explicitly pulls content
-from Vim into the system clipboard.
+Instead, this plugin creates a unique mapping that explicitly pulls content from
+Vim into the system clipboard.
 
-Usage
------
+## Usage
 
-System copy provides a mapping to copy to the system clipboard using a motion
-or visual selection. It also provides a mapping for pasting from the system
+System copy provides a mapping to copy to the system clipboard using a motion or
+visual selection. It also provides a mapping for pasting from the system
 clipboard.
 
-The default mapping is `cp` for copying and `cv` for pasting, and can be followed by any motion or text
-object. For instance:
+The default mapping is `cp` for copying and `cv` for pasting, and can be
+followed by any motion or text object. For instance:
 
 - `cpiw` => copy word into system clipboard
 - `cpi'` => copy inside single quotes to system clipboard
@@ -23,49 +21,52 @@ object. For instance:
 
 In addition, `cP` is mapped to copy the current line directly.
 
-The sequence `cV` is mapped to paste the content of system clipboard to the
-next line.
+The sequence `cV` is mapped to paste the content of system clipboard to the next
+line.
 
-Clipboard Utilities
--------------------
+## Clipboard Utilities
 
- - OSX     - `pbcopy` and `pbpaste`
- - Windows - `clip` and `paste`
- - Linux   - `xsel` on X11, and `wl-copy` and `wl-paste` on Wayland
+- OSX - `pbcopy` and `pbpaste`
+- Windows - `clip` and `paste`
+- Linux - `xsel` on X11, and `wl-copy` and `wl-paste` on Wayland
 
- **Note:** `xsel` can be installed with `apt-get install xsel` if your system doesn't have it installed
+**Note:** `xsel` can be installed with `apt-get install xsel` if your system
+doesn't have it installed
 
-Options
--------
+## Options
 
-`system-copy` uses default copy and paste command based on your OS, but
-you can override either of these commands if you have more specific needs.
+`system-copy` uses default copy and paste command based on your OS, but you can
+override either of these commands if you have more specific needs.
 
 To declare custom copy command use following example:
-``` vim
+
+```vim
 let g:system_copy#copy_command='xclip -sel clipboard'
 ```
+
 And to declare custom paste command use:
-``` vim
+
+```vim
 let g:system_copy#paste_command='xclip -sel clipboard -o'
 ```
-By default `system_copy` prints a message each time you execute the copy- or paste-operation.
-If you want to suppress it use:
+
+By default `system_copy` prints a message each time you execute the copy- or
+paste-operation. If you want to suppress it use:
+
 ```vim
 let g:system_copy_silent = 1
 ```
 
-Installation
-------------
+## Installation
 
-If you don't have a preferred installation method, I recommend using [Vundle](https://github.com/VundleVim/Vundle.vim).
-Assuming you have Vundle installed and configured, the following steps will
-install the plugin:
+If you don't have a preferred installation method, I recommend using
+[Vundle](https://github.com/VundleVim/Vundle.vim). Assuming you have Vundle
+installed and configured, the following steps will install the plugin:
 
 Add the following line to your `~/.vimrc` and then run `:PluginInstall` from
 within Vim:
 
-``` vim
+```vim
 call vundle#begin()
 " ...
 Plugin 'christoomey/vim-system-copy'
