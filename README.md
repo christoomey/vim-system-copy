@@ -55,6 +55,16 @@ If you want to suppress it use:
 let g:system_copy_silent = 1
 ```
 
+WSL Support
+-----------
+
+If you want to use System Copy with WSL, use the following code block.
+``` vim
+if system('uname -r | grep WSL')
+  let g:system_copy#copy_command='/mnt/c/Windows/System32/clip.exe'
+endif
+```
+
 Installation
 ------------
 
