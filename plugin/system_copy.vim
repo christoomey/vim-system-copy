@@ -29,8 +29,8 @@ function! s:system_copy(type, ...) abort
   let command = s:CopyCommandForCurrentOS()
   silent call system(command, getreg('@'))
   " Call OSC52 copy
-  if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*YankOSC52')
-    call YankOSC52(getreg('@'))
+  if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*OSCYankString')
+    call OSCYankString(getreg('@'))
   endif
   if g:system_copy_silent == 0
     echohl String | echon 'Copied to clipboard using: ' . command | echohl None
