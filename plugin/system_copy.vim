@@ -27,43 +27,60 @@ function! s:system_copy(type, ...) abort
     silent exe "normal! `[v`]y"
   endif
   let command = s:CopyCommandForCurrentOS()
-  silent call system(command, getreg('@'))
-  " Call OSC52 copy
-  if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*OSCYankString')
-    call OSCYankString(getreg('@'))
-  endif
-  if g:system_copy_silent == 0
-    echohl String | echon 'Copied to clipboard using: ' . command | echohl None
+  let command_output = system(command, getreg('@'))
+  if v:shell_error != 0
+    " Fall back to call OSC52 copy
+    if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*OSCYankString')
+      call OSCYankString(getreg('@'))
+    else
+      echoerr command_output
+    endif
+  else
+    if g:system_copy_silent == 0
+      echohl String | echon 'Copied to clipboard using: ' . command | echohl None
+    endif
   endif
   let @@ = unnamed
 endfunction
 
 function! s:system_paste(type, ...) abort
-  let mode = <SID>resolve_mode(a:type, a:0)
   let command = <SID>PasteCommandForCurrentOS()
-  let unnamed = @@
-  silent exe "set paste"
-  if mode == s:linewise
-    let lines = { 'start': line("'["), 'end': line("']") }
-    silent exe lines.start . "," . lines.end . "d"
-    silent exe "normal! O" . system(command)
-  elseif mode == s:visual || mode == s:blockwise
-    silent exe "normal! `<" . a:type . "`>c" . system(command)
+  let command_output = system(command)
+  if v:shell_error != 0
+    echoerr command_output
   else
-    silent exe "normal! `[v`]c" . system(command)
+    let paste_content = command_output
+    let mode = <SID>resolve_mode(a:type, a:0)
+    let unnamed = @@
+    silent exe "set paste"
+    if mode == s:linewise
+      let lines = { 'start': line("'["), 'end': line("']") }
+      silent exe lines.start . "," . lines.end . "d"
+      silent exe "normal! O" . paste_content
+    elseif mode == s:visual || mode == s:blockwise
+      silent exe "normal! `<" . a:type . "`>c" . paste_content
+    else
+      silent exe "normal! `[v`]c" . paste_content
+    endif
+    silent exe "set nopaste"
+    if g:system_copy_silent == 0
+      echohl String | echon 'Pasted to clipboard using: ' . command | echohl None
+    endif
+    let @@ = unnamed
   endif
-  silent exe "set nopaste"
-  if g:system_copy_silent == 0
-    echohl String | echon 'Pasted to clipboard using: ' . command | echohl None
-  endif
-  let @@ = unnamed
 endfunction
 
 function! s:system_paste_line() abort
   let command = <SID>PasteCommandForCurrentOS()
-  put =system(command)
-  if g:system_copy_silent == 0
-    echohl String | echon 'Pasted to vim using: ' . command | echohl None
+  let command_output = system(command)
+  if v:shell_error != 0
+    echoerr command_output
+  else
+    let paste_content = command_output
+    put =paste_content
+    if g:system_copy_silent == 0
+      echohl String | echon 'Pasted to vim using: ' . command | echohl None
+    endif
   endif
 endfunction
 
