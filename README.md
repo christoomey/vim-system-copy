@@ -33,10 +33,18 @@ Clipboard Utilities
  - Windows - `clip` and `paste`
  - Linux   - `xsel` on X11, and `wl-copy` and `wl-paste` on Wayland
 
- **Note:** `xsel` can be installed with `apt-get install xsel` if your system doesn't have it installed
+ **Note:** `xsel` can be installed with `apt-get install xsel` if your system doesn't have it installed.
+
+ - OS-independent copy - provided by `ojroques/vim-oscyank` based on `ANSI OSC52 sequence`
+ 
+ **Note:** This feature requires an external plugin [ojroques/vim-oscyank](https://github.com/ojroques/vim-oscyank)
+ and needs to be [manually enabled](#using-osc52-copy-as-fallback). 
+ The terminal emulators that support this feature are listed [here](https://github.com/ojroques/vim-oscyank#vim-oscyank). 
 
 Options
 -------
+
+### Customizing copy & paste command
 
 `system-copy` uses default copy and paste command based on your OS, but
 you can override either of these commands if you have more specific needs.
@@ -49,11 +57,31 @@ And to declare custom paste command use:
 ``` vim
 let g:system_copy#paste_command='xclip -sel clipboard -o'
 ```
+
+### Supressing message output
+
 By default `system_copy` prints a message each time you execute the copy- or paste-operation.
 If you want to suppress it use:
 ```vim
 let g:system_copy_silent = 1
 ```
+
+### Using OSC52 copy as fallback
+OSC52 is an ANSI escape sequence that allows you to copy text into your
+system clipboard from the [supported terminal emulators](https://github.com/ojroques/vim-oscyank#vim-oscyank).
+
+It is useful for running Vim via remote SSH, especially when the default
+copy command or X11 forwarding is unavaliable on the remote host.
+Once this feature is enabled, OSC52 copy sequence is used as a fallback
+if the default copy command failed. You can enable this feature
+on your local machine with [ojroques/vim-oscyank](https://github.com/ojroques/vim-oscyank)
+plugin and the supported terminal emulator installed:
+```vim
+let g:system_copy_enable_osc52 = 1
+```
+**Note:** By default, no extra settings for `ojroques/vim-oscyank` are
+required. Only works when copying to the system clipboard; does not
+support pasting from the system clipboard.
 
 Installation
 ------------
