@@ -27,7 +27,7 @@ function! s:system_copy(type, ...) abort
     silent exe "normal! `[v`]y"
   endif
   let command = s:CopyCommandForCurrentOS()
-  let command_output = system(command, getreg('@'))
+  silent let command_output = system(command, getreg('@'))
   if v:shell_error != 0
     " Fall back to call OSC52 copy
     if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*OSCYankString')
@@ -45,7 +45,7 @@ endfunction
 
 function! s:system_paste(type, ...) abort
   let command = <SID>PasteCommandForCurrentOS()
-  let command_output = system(command)
+  silent let command_output = system(command)
   if v:shell_error != 0
     echoerr command_output
   else
@@ -72,7 +72,7 @@ endfunction
 
 function! s:system_paste_line() abort
   let command = <SID>PasteCommandForCurrentOS()
-  let command_output = system(command)
+  silent let command_output = system(command)
   if v:shell_error != 0
     echoerr command_output
   else
