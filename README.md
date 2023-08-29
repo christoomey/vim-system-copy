@@ -1,3 +1,18 @@
+Forked differences from main (christoomey version):
+===========
+paste now mimics native vim paste instead of whatever chris was using.
+removed all plugin bindings (since I didn't like them). Must now explicitly set in .vimrc
+personal .vimrc:
+```.vimrc
+nmap <leader>y <Plug>SystemCopy
+nmap <leader>yy <Plug>SystemCopyLine
+nmap <leader>Y <Plug>SystemCopyLine
+xmap <leader>y <Plug>SystemCopy
+xmap <leader>p <Plug>SystemPaste
+nmap <leader>p <Plug>SystemPaste
+nmap <leader>P <Plug>SystemPasteLine
+```
+
 System Copy
 ===========
 
