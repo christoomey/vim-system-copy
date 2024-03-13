@@ -30,8 +30,8 @@ function! s:system_copy(type, ...) abort
   silent let command_output = system(command, getreg('@'))
   if v:shell_error != 0
     " Fall back to call OSC52 copy
-    if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*OSCYankString')
-      call OSCYankString(getreg('@'))
+    if exists("g:system_copy_enable_osc52") && g:system_copy_enable_osc52 > 0 && exists('*OSCYank')
+      call OSCYank(getreg('@'))
     else
       echoerr command_output
     endif
