@@ -104,6 +104,8 @@ function! s:currentOS()
     let known_os = s:windows
   elseif os ==? 'Linux'
     let known_os = s:linux
+  elseif os ==? 'FreeBSD'
+    let known_os = s:linux
   else
     exe "normal \<Esc>"
     throw "unknown OS: " . os
