@@ -60,27 +60,16 @@ function! s:system_paste(type, ...) abort
     elseif mode == s:visual || mode == s:blockwise
       silent exe "normal! `<" . a:type . "`>c" . paste_content
     else
-      silent exe "normal! `[v`]c" . paste_content
+      let str_len = strcharlen(paste_content)-1
+			let multiline = strcharpart(paste_content, str_len, 1) == "\n"
+			let c = [{'p': 'a', 'P': 'i'},{'p': 'o', 'P': 'O'}][multiline]
+      silent exe "normal! " . c[a:type] . (multiline ? strcharpart(paste_content, 0, str_len) : paste_content)
     endif
     silent exe "set nopaste"
     if g:system_copy_silent == 0
       echohl String | echon 'Pasted to clipboard using: ' . command | echohl None
     endif
     let @@ = unnamed
-  endif
-endfunction
-
-function! s:system_paste_line() abort
-  let command = <SID>PasteCommandForCurrentOS()
-  silent let command_output = system(command)
-  if v:shell_error != 0
-    echoerr command_output
-  else
-    let paste_content = command_output
-    put =paste_content
-    if g:system_copy_silent == 0
-      echohl String | echon 'Pasted to vim using: ' . command | echohl None
-    endif
   endif
 endfunction
 
@@ -153,30 +142,6 @@ xnoremap <silent> <Plug>SystemCopy :<C-U>call <SID>system_copy(visualmode(),visu
 nnoremap <silent> <Plug>SystemCopy :<C-U>set opfunc=<SID>system_copy<CR>g@
 nnoremap <silent> <Plug>SystemCopyLine :<C-U>set opfunc=<SID>system_copy<Bar>exe 'norm! 'v:count1.'g@_'<CR>
 xnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste(visualmode(),visualmode() ==# 'V' ? 1 : 0)<CR>
-nnoremap <silent> <Plug>SystemPaste :<C-U>set opfunc=<SID>system_paste<CR>g@
-nnoremap <silent> <Plug>SystemPasteLine :<C-U>call <SID>system_paste_line()<CR>
-
-if !hasmapto('<Plug>SystemCopy', 'n') || maparg('cp', 'n') ==# ''
-  nmap cp <Plug>SystemCopy
-endif
-
-if !hasmapto('<Plug>SystemCopy', 'v') || maparg('cp', 'v') ==# ''
-  xmap cp <Plug>SystemCopy
-endif
-
-if !hasmapto('<Plug>SystemCopyLine', 'n') || maparg('cP', 'n') ==# ''
-  nmap cP <Plug>SystemCopyLine
-endif
-
-if !hasmapto('<Plug>SystemPaste', 'n') || maparg('cv', 'n') ==# ''
-  nmap cv <Plug>SystemPaste
-endif
-
-if !hasmapto('<Plug>SystemPaste', 'v') || maparg('cv', 'v') ==# ''
-  xmap cv <Plug>SystemPaste
-endif
-
-if !hasmapto('<Plug>SystemPasteLine', 'n') || maparg('cV', 'n') ==# ''
-  nmap cV <Plug>SystemPasteLine
-endif
+nnoremap <silent> <Plug>SystemPaste :<C-U>call <SID>system_paste('p')<CR>
+nnoremap <silent> <Plug>SystemPasteLine :<C-U>call <SID>system_paste('P')<CR>
 " vim:ts=2:sw=2:sts=2
